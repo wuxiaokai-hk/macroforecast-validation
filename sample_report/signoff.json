@@ -1,0 +1,86 @@
+{
+ "sections": {
+  "scope": {
+   "status": "draft",
+   "text": "Loan balance forecast (macro-driver model) is used to forecast quarterly loan balances under macro scenarios for capital planning and stress testing; risk tier High. The validation tests the model against that use.",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "data": {
+   "status": "draft",
+   "text": "5 of 5 tests in this section pass. D1: The validator's organic growth, rebuilt from the raw balance file and the events file, matches the developer's prepared target in every quarter (largest gap 1.8e-15). D2: 95 quarters (2002Q2 to 2025Q4) with no missing quarters and no missing values. D3: No quarter of target growth has |robust z| > 3.5. D4: Target growth and every driver are stationary on both tests. D5: In every scenario, every driver stays inside its historical range over the 12 forecast quarters.",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "soundness": {
+   "status": "draft",
+   "text": "3 of 6 tests in this section pass. C3 (medium severity, warn): The equation uses 6 quarterly dummies (1 not significant at 10%); adjusted R2 is 0.690 with them and 0.689 without. The dummied quarters get zero residuals, so the COVID-period shock is excluded from what the model learns about stress. C4 (medium severity, warn): The equation leaves out the Interest rates and Labour channels that the developer's own literature core includes, so scenarios that move them (rate shocks, job losses) are transmitted only through the remaining drivers. C6 (low severity, warn): FHPI.ION|dlog|L1 ranges 0.124 to 0.216 across windows (full sample 0.151) and is outside +/- 2 SE of the full-sample value in 29% of them. The effect is less precisely pinned down than the full-sample standard error suggests. Passed: C1 driver signs agree with economic theory; C2 significance (HAC) and multicollinearity of drivers; C5 no circular drivers (credit aggregates forecasting credit).",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "replication": {
+   "status": "draft",
+   "text": "2 of 2 tests in this section pass. R1: All 10 coefficients reproduce from the raw files with an independent OLS (largest relative difference 1.4e-12). R2: The validator's own recursion reproduces the developer's forecasts in all 4 scenarios (largest gap 1.7e-16 log points per quarter).",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "performance": {
+   "status": "draft",
+   "text": "2 of 4 tests in this section pass. P1 (high severity, fail): The developer's out-of-sample test, the only one that re-selects drivers, rests on 3 forecast origin(s) (2021Q1, 2023Q1, 2025Q1), so its ranking of models (and the choice of 'Elastic Net first') is not statistically supported; the developer's DM tests have no power at this depth. P4 (medium severity, warn): Errors are significantly biased: -0.33% at 4 quarters (p = 0.007), -0.74% at 8 quarters (p = 0.004). The model systematically under-forecasts the balance. Passed: P2 independent rolling-origin backtest against AR(1) and drift; P3 accuracy through the 2008-09 stress period (4 quarters ahead).",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "diagnostics": {
+   "status": "draft",
+   "text": "5 of 5 tests in this section pass. E1: Ljung-Box p = 0.618 at 4 lags and 0.780 at 8 lags. E2: Breusch-Pagan p = 0.601; ARCH(4) p = 0.649. E3: Jarque-Bera p = 0.662 (skew -0.22, kurtosis 3.11). E4: RESET p = 0.272. E5: CUSUM p = 0.135; largest Chow F = 1.50 at 2014Q3 against a 5% critical value of 4.09.",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "sensitivity": {
+   "status": "draft",
+   "text": "2 of 3 tests in this section pass. S1 (medium severity, warn): Each driver moves the 8-quarter balance in the expected direction: +1 SD FHPI.ION (dlog) each quarter +2.53%; +1 SD FYPD.ION (dlog) each quarter +1.51%. Shocks to 5-year conventional mortgage rate (%) and Unemployment rate, Ontario (%) have no effect at all, although the developer's literature core treats them as channels. Passed: S2 scenario forecasts rank in the expected order; S3 severity of the stress response compared with history.",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  },
+  "ground_truth": {
+   "status": "draft",
+   "text": "1 of 3 tests in this section pass. G1 (medium severity, warn): The model contains 2 of the 4 true drivers (FHPI.ION|dlog|L1, FYPD.ION|dlog|L1) and misses FRMORT5Y.IC|diff|L2, FLBR.ION|diff|L1; it includes no false drivers. G2 (medium severity, warn): Across 50 datasets simulated from the true equation, Elastic Net first picks a given true driver in 15% of datasets on average and adds 0.5 false drivers per run; Screen first picks a given true driver in 6% of datasets on average and adds 2.2 false drivers per run. Found in under 20% of datasets even by the better approach: FLBR.ION|diff|L1, FRMORT5Y.IC|diff|L2, FYPD.ION|dlog|L1. With about 95 quarters of data, statistical selection cannot be relied on to find these channels. FYPD.ION|dlog|L1 is in the model under review, but Elastic Net first finds it in only 2% of fresh datasets: its inclusion here is partly luck of the sample. Passed: G3 cost of the omitted drivers in the severe scenario.",
+   "drafted_by": "agent (template writer)",
+   "evidence": "7b46867cbe35ad39",
+   "approved_by": null,
+   "approved_at": null,
+   "comment": null,
+   "edited_by": null
+  }
+ },
+ "rating": {},
+ "final": null
+}

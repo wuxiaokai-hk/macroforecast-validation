@@ -1,0 +1,57 @@
+# Validation scope for one macroforecast run.
+# Paths are relative to this file unless absolute.
+
+model_under_review: auto          # "auto" = the model the developer recommends in macroforecast_result.json
+run_dir: runs/loan_balance        # finished macroforecast run (python examples/make_run.py builds it)
+
+inputs:                           # the developer's raw inputs, re-read independently
+  data: ../Forecasting-test/data/bank_data.csv
+  target: loan_balance
+  metadata: ../Forecasting-test/data/macro_metadata.csv
+  events: ../Forecasting-test/data/bank_events.csv
+  scenarios:
+    Baseline: ../Forecasting-test/data/moodys_baseline.csv
+    S1 Upside: ../Forecasting-test/data/moodys_s1_upside.csv
+    S3 Downside: ../Forecasting-test/data/moodys_s3_downside.csv
+    S4 Severe: ../Forecasting-test/data/moodys_s4_severe.csv
+  scenario_order: [S1 Upside, Baseline, S3 Downside, S4 Severe]   # expected ranking, best to worst
+
+model_profile:
+  name: Loan balance forecast (macro-driver model)
+  owner: Model developer (first line)
+  purpose: Forecast quarterly loan balances under macro scenarios for capital planning and stress testing
+  use: Scenario forecasts 1-12 quarters ahead; results feed the capital plan
+  risk_tier: High               # materiality x complexity x reliance
+
+thresholds:
+  min_oos_origins: 8            # fewer independent forecast origins = performance evidence too thin
+  min_skill_vs_ar1_pct: 10      # model RMSE must beat AR(1) by at least this % at h=4 and h=8
+  dm_alpha: 0.10
+  max_vif: 5
+  max_driver_p: 0.05
+  dummy_p: 0.10                 # dummies with p above this are flagged as not supported by data
+  max_extrapolation_share: 0.25 # share of scenario quarters outside the historical range of a driver
+  replication_tol: 1.0e-6       # relative tolerance for re-estimated coefficients
+  forecast_tol: 1.0e-6
+  stress_drawdown_ratio: 0.5    # severe scenario should produce at least this share of the worst historical drawdown
+
+independent_backtest:
+  first_origin: 2008Q1
+  horizons: [1, 2, 4, 8]
+
+ground_truth:                   # only for simulated data: the true data-generating process
+  enabled: true
+  drivers:
+    FHPI.ION|dlog|L1: 0.15
+    FYPD.ION|dlog|L1: 0.20
+    FRMORT5Y.IC|diff|L2: -0.0025
+    FLBR.ION|diff|L1: -0.0020
+  ar1: 0.30
+  const: 0.0040
+  monte_carlo_results: evidence/monte_carlo_terms.csv   # tools/monte_carlo.py writes it
+
+agent:
+  backend: auto                 # auto = local Ollama if running, else the deterministic template writer
+  ollama_url: http://localhost:11434
+  ollama_model: llama3.1:8b
+  max_retries: 1

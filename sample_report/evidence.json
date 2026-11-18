@@ -1,0 +1,1045 @@
+{
+ "model": "Elastic Net first",
+ "run_dir": "runs/loan_balance",
+ "fingerprint": "7b46867cbe35ad39",
+ "proposed_rating": {
+  "rating": "Needs improvement",
+  "why": "1 high and 6 medium findings"
+ },
+ "checks": [
+  {
+   "id": "A1",
+   "section": "scope",
+   "title": "Model profile, intended use and risk tier",
+   "status": "info",
+   "finding": "Loan balance forecast (macro-driver model) is used to forecast quarterly loan balances under macro scenarios for capital planning and stress testing; risk tier High. The validation tests the model against that use.",
+   "metrics": {
+    "name": "Loan balance forecast (macro-driver model)",
+    "owner": "Model developer (first line)",
+    "purpose": "Forecast quarterly loan balances under macro scenarios for capital planning and stress testing",
+    "use": "Scenario forecasts 1-12 quarters ahead; results feed the capital plan",
+    "risk_tier": "High"
+   },
+   "threshold": "",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "D1",
+   "section": "data",
+   "title": "Target lineage: raw balances and events rebuilt independently",
+   "status": "pass",
+   "finding": "The validator's organic growth, rebuilt from the raw balance file and the events file, matches the developer's prepared target in every quarter (largest gap 1.8e-15).",
+   "metrics": {
+    "max_abs_gap": 0.0,
+    "quarters_compared": 103
+   },
+   "threshold": "gap < 1e-9",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "D2",
+   "section": "data",
+   "title": "Completeness of the estimation sample",
+   "status": "pass",
+   "finding": "95 quarters (2002Q2 to 2025Q4) with no missing quarters and no missing values.",
+   "metrics": {
+    "n_obs": 95,
+    "start": "2002Q2",
+    "end": "2025Q4",
+    "rows_with_missing": 0,
+    "absent_quarters": 0
+   },
+   "threshold": "no gaps",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "D3",
+   "section": "data",
+   "title": "Outliers in target growth",
+   "status": "pass",
+   "finding": "No quarter of target growth has |robust z| > 3.5.",
+   "metrics": {
+    "n_outliers": 0,
+    "untreated": 0
+   },
+   "threshold": "|robust z| > 3.5 treated",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": []
+  },
+  {
+   "id": "D4",
+   "section": "data",
+   "title": "Stationarity of target growth and drivers (ADF and KPSS)",
+   "status": "pass",
+   "finding": "Target growth and every driver are stationary on both tests.",
+   "metrics": {
+    "series_tested": 3,
+    "not_clear": 0
+   },
+   "threshold": "ADF p < 0.05 and KPSS p > 0.05",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "series": "target growth",
+     "adf_p": 0.0,
+     "kpss_p": 0.1,
+     "verdict": "stationary"
+    },
+    {
+     "series": "FHPI.ION|dlog|L1",
+     "adf_p": 1.2e-05,
+     "kpss_p": 0.1,
+     "verdict": "stationary"
+    },
+    {
+     "series": "FYPD.ION|dlog|L1",
+     "adf_p": 0.0,
+     "kpss_p": 0.1,
+     "verdict": "stationary"
+    }
+   ]
+  },
+  {
+   "id": "D5",
+   "section": "data",
+   "title": "Scenario inputs inside the historical range of each driver",
+   "status": "pass",
+   "finding": "In every scenario, every driver stays inside its historical range over the 12 forecast quarters.",
+   "metrics": {
+    "worst_share_outside": 0.0,
+    "worst_driver": "FHPI.ION|dlog|L1",
+    "worst_scenario": "Baseline"
+   },
+   "threshold": "share outside <= 25%",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "scenario": "Baseline",
+     "driver": "FHPI.ION|dlog|L1",
+     "hist_min": -0.042792,
+     "hist_max": 0.068187,
+     "scen_min": 0.003337,
+     "scen_max": 0.013328,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "Baseline",
+     "driver": "FYPD.ION|dlog|L1",
+     "hist_min": -0.010422,
+     "hist_max": 0.040482,
+     "scen_min": 0.007765,
+     "scen_max": 0.013679,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S1 Upside",
+     "driver": "FHPI.ION|dlog|L1",
+     "hist_min": -0.042792,
+     "hist_max": 0.068187,
+     "scen_min": 0.011687,
+     "scen_max": 0.014816,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S1 Upside",
+     "driver": "FYPD.ION|dlog|L1",
+     "hist_min": -0.010422,
+     "hist_max": 0.040482,
+     "scen_min": 0.008915,
+     "scen_max": 0.013679,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S3 Downside",
+     "driver": "FHPI.ION|dlog|L1",
+     "hist_min": -0.042792,
+     "hist_max": 0.068187,
+     "scen_min": -0.017563,
+     "scen_max": 0.013328,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S3 Downside",
+     "driver": "FYPD.ION|dlog|L1",
+     "hist_min": -0.010422,
+     "hist_max": 0.040482,
+     "scen_min": 4e-05,
+     "scen_max": 0.013679,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S4 Severe",
+     "driver": "FHPI.ION|dlog|L1",
+     "hist_min": -0.042792,
+     "hist_max": 0.068187,
+     "scen_min": -0.040019,
+     "scen_max": 0.01483,
+     "share_outside": 0.0
+    },
+    {
+     "scenario": "S4 Severe",
+     "driver": "FYPD.ION|dlog|L1",
+     "hist_min": -0.010422,
+     "hist_max": 0.040482,
+     "scen_min": -0.00631,
+     "scen_max": 0.013679,
+     "share_outside": 0.0
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "section": "soundness",
+   "title": "Driver signs agree with economic theory",
+   "status": "pass",
+   "finding": "All 2 drivers have the expected sign.",
+   "metrics": {
+    "drivers": 2,
+    "wrong_sign": 0
+   },
+   "threshold": "sign = expected_sign in metadata",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "driver": "FHPI.ION|dlog|L1",
+     "description": "House price index, Ontario (2005=100)",
+     "theme": "Housing",
+     "coef": 0.150745,
+     "expected_sign": 1,
+     "sign_ok": true
+    },
+    {
+     "driver": "FYPD.ION|dlog|L1",
+     "description": "Personal disposable income, Ontario (C$)",
+     "theme": "Income",
+     "coef": 0.255965,
+     "expected_sign": 1,
+     "sign_ok": true
+    }
+   ]
+  },
+  {
+   "id": "C2",
+   "section": "soundness",
+   "title": "Significance (HAC) and multicollinearity of drivers",
+   "status": "pass",
+   "finding": "Every driver is significant at 5% with HAC errors and the largest VIF is 1.36.",
+   "metrics": {
+    "max_p": 0.000212,
+    "max_vif": 1.35625
+   },
+   "threshold": "p <= 0.05, VIF <= 5",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "term": "y_lag1",
+     "coef": 0.215328,
+     "se_hac": 0.058137,
+     "p_value": 0.000212,
+     "vif": 1.098744
+    },
+    {
+     "term": "FHPI.ION|dlog|L1",
+     "coef": 0.150745,
+     "se_hac": 0.017758,
+     "p_value": 0.0,
+     "vif": 1.35625
+    },
+    {
+     "term": "FYPD.ION|dlog|L1",
+     "coef": 0.255965,
+     "se_hac": 0.04707,
+     "p_value": 0.0,
+     "vif": 1.247895
+    }
+   ]
+  },
+  {
+   "id": "C3",
+   "section": "soundness",
+   "title": "Dummy variables are few and supported by the data",
+   "status": "warn",
+   "finding": "The equation uses 6 quarterly dummies (1 not significant at 10%); adjusted R2 is 0.690 with them and 0.689 without. The dummied quarters get zero residuals, so the COVID-period shock is excluded from what the model learns about stress.",
+   "metrics": {
+    "n_dummies": 6,
+    "not_significant": 1,
+    "adj_r2": 0.6901313125892451,
+    "adj_r2_without_dummies": 0.6890495741638043
+   },
+   "threshold": "dummy p <= 0.1",
+   "severity": "medium",
+   "recommendation": "Keep only dummies with a documented event and a significant effect.",
+   "chart": null,
+   "table": [
+    {
+     "dummy": "D_2020Q1",
+     "coef": 0.002971,
+     "p_value": 0.0
+    },
+    {
+     "dummy": "D_2020Q2",
+     "coef": -0.006535,
+     "p_value": 0.0
+    },
+    {
+     "dummy": "D_2020Q3",
+     "coef": -0.001697,
+     "p_value": 0.054275
+    },
+    {
+     "dummy": "D_2020Q4",
+     "coef": 0.003702,
+     "p_value": 0.085695
+    },
+    {
+     "dummy": "D_2021Q1",
+     "coef": -0.00031,
+     "p_value": 0.773073
+    },
+    {
+     "dummy": "D_2021Q2",
+     "coef": -0.001809,
+     "p_value": 0.028472
+    }
+   ]
+  },
+  {
+   "id": "C4",
+   "section": "soundness",
+   "title": "Coverage of the channels in the developer's literature core",
+   "status": "warn",
+   "finding": "The equation leaves out the Interest rates and Labour channels that the developer's own literature core includes, so scenarios that move them (rate shocks, job losses) are transmitted only through the remaining drivers.",
+   "metrics": {
+    "literature_themes": [
+     "Housing",
+     "Income",
+     "Interest rates",
+     "Labour"
+    ],
+    "missing_themes": [
+     "Interest rates",
+     "Labour"
+    ]
+   },
+   "threshold": "every literature channel represented or its omission justified",
+   "severity": "medium",
+   "recommendation": "Justify the omission, or add the channel with a constrained coefficient.",
+   "chart": null
+  },
+  {
+   "id": "C5",
+   "section": "soundness",
+   "title": "No circular drivers (credit aggregates forecasting credit)",
+   "status": "pass",
+   "finding": "No driver is itself a money or credit aggregate.",
+   "metrics": {
+    "circular_drivers": []
+   },
+   "threshold": "no money & credit drivers",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "C6",
+   "section": "soundness",
+   "title": "Coefficient stability (expanding-window re-estimation)",
+   "status": "warn",
+   "finding": "FHPI.ION|dlog|L1 ranges 0.124 to 0.216 across windows (full sample 0.151) and is outside +/- 2 SE of the full-sample value in 29% of them. The effect is less precisely pinned down than the full-sample standard error suggests.",
+   "metrics": {
+    "windows": 72,
+    "unstable_terms": [
+     "FHPI.ION|dlog|L1"
+    ]
+   },
+   "threshold": "no sign change; <= 25% of windows outside +/- 2 SE",
+   "severity": "low",
+   "recommendation": "",
+   "chart": "c6_coefficient_paths.png",
+   "table": [
+    {
+     "term": "FHPI.ION|dlog|L1",
+     "full_sample": 0.150745,
+     "min": 0.123692,
+     "max": 0.215865,
+     "range_vs_full": 0.611451,
+     "sign_changes": 0,
+     "outside_full_2se": 0.291667
+    },
+    {
+     "term": "FYPD.ION|dlog|L1",
+     "full_sample": 0.255965,
+     "min": 0.22969,
+     "max": 0.317698,
+     "range_vs_full": 0.34383,
+     "sign_changes": 0,
+     "outside_full_2se": 0.0
+    },
+    {
+     "term": "y_lag1",
+     "full_sample": 0.215328,
+     "min": 0.081441,
+     "max": 0.246351,
+     "range_vs_full": 0.765858,
+     "sign_changes": 0,
+     "outside_full_2se": 0.055556
+    }
+   ]
+  },
+  {
+   "id": "R1",
+   "section": "replication",
+   "title": "Coefficients re-estimated from raw data",
+   "status": "pass",
+   "finding": "All 10 coefficients reproduce from the raw files with an independent OLS (largest relative difference 1.4e-12).",
+   "metrics": {
+    "terms": 10,
+    "max_rel_diff": 0.0,
+    "n_obs": 95
+   },
+   "threshold": "relative difference <= 1e-06",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "term": "const",
+     "developer": 0.004035,
+     "validator": 0.004035,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "y_lag1",
+     "developer": 0.215328,
+     "validator": 0.215328,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "FHPI.ION|dlog|L1",
+     "developer": 0.150745,
+     "validator": 0.150745,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "FYPD.ION|dlog|L1",
+     "developer": 0.255965,
+     "validator": 0.255965,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2020Q1",
+     "developer": 0.002971,
+     "validator": 0.002971,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2020Q2",
+     "developer": -0.006535,
+     "validator": -0.006535,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2020Q3",
+     "developer": -0.001697,
+     "validator": -0.001697,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2020Q4",
+     "developer": 0.003702,
+     "validator": 0.003702,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2021Q1",
+     "developer": -0.00031,
+     "validator": -0.00031,
+     "rel_diff": 0.0
+    },
+    {
+     "term": "D_2021Q2",
+     "developer": -0.001809,
+     "validator": -0.001809,
+     "rel_diff": 0.0
+    }
+   ]
+  },
+  {
+   "id": "R2",
+   "section": "replication",
+   "title": "Scenario forecasts reproduced from the equation and scenario files",
+   "status": "pass",
+   "finding": "The validator's own recursion reproduces the developer's forecasts in all 4 scenarios (largest gap 1.7e-16 log points per quarter).",
+   "metrics": {
+    "scenarios": 4,
+    "max_change_gap": 0.0,
+    "max_level_gap_pct": 0.0
+   },
+   "threshold": "gap <= 1e-06",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "scenario": "Baseline",
+     "quarters": 12,
+     "max_change_gap": 0.0,
+     "max_level_gap_pct": 0.0
+    },
+    {
+     "scenario": "S1 Upside",
+     "quarters": 12,
+     "max_change_gap": 0.0,
+     "max_level_gap_pct": 0.0
+    },
+    {
+     "scenario": "S3 Downside",
+     "quarters": 12,
+     "max_change_gap": 0.0,
+     "max_level_gap_pct": 0.0
+    },
+    {
+     "scenario": "S4 Severe",
+     "quarters": 12,
+     "max_change_gap": 0.0,
+     "max_level_gap_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "P1",
+   "section": "performance",
+   "title": "Depth of the developer's out-of-sample test (drivers re-selected at each origin)",
+   "status": "fail",
+   "finding": "The developer's out-of-sample test, the only one that re-selects drivers, rests on 3 forecast origin(s) (2021Q1, 2023Q1, 2025Q1), so its ranking of models (and the choice of 'Elastic Net first') is not statistically supported; the developer's DM tests have no power at this depth.",
+   "metrics": {
+    "origins": 3,
+    "origin_list": [
+     "2021Q1",
+     "2023Q1",
+     "2025Q1"
+    ],
+    "required": 8
+   },
+   "threshold": ">= 8 origins",
+   "severity": "high",
+   "recommendation": "Re-run the out-of-sample test with a quarterly or semi-annual step (oos.step) and an earlier first origin, and choose the model on that evidence.",
+   "chart": null
+  },
+  {
+   "id": "P2",
+   "section": "performance",
+   "title": "Independent rolling-origin backtest against AR(1) and drift",
+   "status": "pass",
+   "finding": "Re-estimated at 71 quarterly origins, the equation beats AR(1) at every tested horizon; at 8 quarters RMSE is 1.10% of the balance vs 2.45% for AR(1) (55% better, DM p = 0.098). This is conditional on actual driver paths and full-sample driver choice, so it is an upper bound on real accuracy.",
+   "metrics": {
+    "origins": 71,
+    "rmse_h8_model": 1.1022979094814231,
+    "rmse_h8_ar1": 2.448572454843374,
+    "skill_h8_pct": 54.982017897774114,
+    "dm_p_h8": 0.09847308236278263
+   },
+   "threshold": "skill >= 10% and DM p <= 0.1 at h=4 and h=8",
+   "severity": null,
+   "recommendation": "",
+   "chart": "p2_backtest_rmse.png",
+   "table": [
+    {
+     "h": 1,
+     "n": 65,
+     "rmse_model": 0.29643,
+     "rmse_ar1": 0.449194,
+     "rmse_drift": 0.549582,
+     "skill_vs_ar1_pct": 34.00837,
+     "bias_model": -0.068627,
+     "dm_vs_ar1": -3.909113,
+     "dm_p": 0.000226
+    },
+    {
+     "h": 2,
+     "n": 63,
+     "rmse_model": 0.465486,
+     "rmse_ar1": 0.793653,
+     "rmse_drift": 1.00337,
+     "skill_vs_ar1_pct": 41.348956,
+     "bias_model": -0.148621,
+     "dm_vs_ar1": -3.495492,
+     "dm_p": 0.00088
+    },
+    {
+     "h": 4,
+     "n": 59,
+     "rmse_model": 0.728593,
+     "rmse_ar1": 1.447019,
+     "rmse_drift": 1.894579,
+     "skill_vs_ar1_pct": 49.648684,
+     "bias_model": -0.33347,
+     "dm_vs_ar1": -2.899486,
+     "dm_p": 0.00527
+    },
+    {
+     "h": 8,
+     "n": 51,
+     "rmse_model": 1.102298,
+     "rmse_ar1": 2.448572,
+     "rmse_drift": 3.574276,
+     "skill_vs_ar1_pct": 54.982018,
+     "bias_model": -0.739845,
+     "dm_vs_ar1": -1.683704,
+     "dm_p": 0.098473
+    }
+   ]
+  },
+  {
+   "id": "P3",
+   "section": "performance",
+   "title": "Accuracy through the 2008-09 stress period (4 quarters ahead)",
+   "status": "pass",
+   "finding": "For the 6 origins from 2008Q1 to 2009Q2 the model's 4-quarter error averages -0.23% (AR(1): +0.70%); it is less accurate than AR(1) at 1 of them.",
+   "metrics": {
+    "origins": 6,
+    "mean_error_model": -0.22637143705169058,
+    "mean_error_ar1": 0.70019012470237,
+    "worse_than_ar1": 1
+   },
+   "threshold": "no worse than AR(1) at most stress origins",
+   "severity": null,
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "origin": "2008Q1",
+     "model": 0.401427,
+     "ar1": 0.865688,
+     "drift": 1.253504
+    },
+    {
+     "origin": "2008Q2",
+     "model": 0.186383,
+     "ar1": 1.438524,
+     "drift": 1.886031
+    },
+    {
+     "origin": "2008Q3",
+     "model": -0.926532,
+     "ar1": 0.522033,
+     "drift": 1.077476
+    },
+    {
+     "origin": "2008Q4",
+     "model": -0.420615,
+     "ar1": 1.5707,
+     "drift": 2.01198
+    },
+    {
+     "origin": "2009Q1",
+     "model": -0.089799,
+     "ar1": 0.76365,
+     "drift": 1.227262
+    },
+    {
+     "origin": "2009Q2",
+     "model": -0.509094,
+     "ar1": -0.959455,
+     "drift": -0.641348
+    }
+   ]
+  },
+  {
+   "id": "P4",
+   "section": "performance",
+   "title": "Forecast bias",
+   "status": "warn",
+   "finding": "Errors are significantly biased: -0.33% at 4 quarters (p = 0.007), -0.74% at 8 quarters (p = 0.004). The model systematically under-forecasts the balance.",
+   "metrics": {
+    "mean_error_h4": -0.33346997639799836,
+    "mean_error_h8": -0.7398454646520417
+   },
+   "threshold": "HAC p >= 0.05",
+   "severity": "medium",
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "h": 4,
+     "mean_error": -0.33347,
+     "t": -2.718919,
+     "p": 0.00655
+    },
+    {
+     "h": 8,
+     "mean_error": -0.739845,
+     "t": -2.91485,
+     "p": 0.003559
+    }
+   ]
+  },
+  {
+   "id": "E1",
+   "section": "diagnostics",
+   "title": "No residual autocorrelation (Ljung-Box)",
+   "status": "pass",
+   "finding": "Ljung-Box p = 0.618 at 4 lags and 0.780 at 8 lags.",
+   "metrics": {
+    "lb_p4": 0.6181935910941319,
+    "lb_p8": 0.7802107033067774
+   },
+   "threshold": "p > 0.05",
+   "severity": null,
+   "recommendation": "",
+   "chart": "e_residuals.png"
+  },
+  {
+   "id": "E2",
+   "section": "diagnostics",
+   "title": "Constant error variance (Breusch-Pagan, ARCH)",
+   "status": "pass",
+   "finding": "Breusch-Pagan p = 0.601; ARCH(4) p = 0.649.",
+   "metrics": {
+    "bp_p": 0.6007396701228187,
+    "arch_p": 0.6492951376108134
+   },
+   "threshold": "p > 0.05",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "E3",
+   "section": "diagnostics",
+   "title": "Normal residuals (Jarque-Bera)",
+   "status": "pass",
+   "finding": "Jarque-Bera p = 0.662 (skew -0.22, kurtosis 3.11).",
+   "metrics": {
+    "jb_p": 0.6619501511002703,
+    "skew": -0.2220432479367293,
+    "kurtosis": 3.106024017207551
+   },
+   "threshold": "p > 0.05",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "E4",
+   "section": "diagnostics",
+   "title": "Functional form (Ramsey RESET)",
+   "status": "pass",
+   "finding": "RESET p = 0.272.",
+   "metrics": {
+    "reset_p": 0.271844
+   },
+   "threshold": "p > 0.05",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "E5",
+   "section": "diagnostics",
+   "title": "Structural stability (CUSUM, Andrews sup-F)",
+   "status": "pass",
+   "finding": "CUSUM p = 0.135; largest Chow F = 1.50 at 2014Q3 against a 5% critical value of 4.09.",
+   "metrics": {
+    "cusum_p": 0.13536535980948605,
+    "sup_f": 1.5007455095820736,
+    "sup_f_date": "2014Q3",
+    "crit_5pct": 4.09
+   },
+   "threshold": "CUSUM p > 0.05 and sup-F < 5% critical value",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "S1",
+   "section": "sensitivity",
+   "title": "Response to one-SD shocks in each driver",
+   "status": "warn",
+   "finding": "Each driver moves the 8-quarter balance in the expected direction: +1 SD FHPI.ION (dlog) each quarter +2.53%; +1 SD FYPD.ION (dlog) each quarter +1.51%. Shocks to 5-year conventional mortgage rate (%) and Unemployment rate, Ontario (%) have no effect at all, although the developer's literature core treats them as channels.",
+   "metrics": {
+    "shocks": 4,
+    "wrong_direction": 0,
+    "no_response_channels": 2
+   },
+   "threshold": "expected direction; literature channels respond",
+   "severity": "medium",
+   "recommendation": "",
+   "chart": "s1_shocks.png",
+   "table": [
+    {
+     "shock": "+1 SD FHPI.ION (dlog) each quarter",
+     "in_model": true,
+     "description": "House price index, Ontario (2005=100)",
+     "sd": 0.01932,
+     "impact_8q_pct": 2.527655,
+     "expected_sign": 1,
+     "direction_ok": true
+    },
+    {
+     "shock": "+1 SD FYPD.ION (dlog) each quarter",
+     "in_model": true,
+     "description": "Personal disposable income, Ontario (C$)",
+     "sd": 0.006837,
+     "impact_8q_pct": 1.511206,
+     "expected_sign": 1,
+     "direction_ok": true
+    },
+    {
+     "shock": "+1 SD FRMORT5Y.IC (diff) each quarter",
+     "in_model": false,
+     "description": "5-year conventional mortgage rate (%)",
+     "sd": 0.209925,
+     "impact_8q_pct": 0.0,
+     "expected_sign": -1,
+     "direction_ok": null
+    },
+    {
+     "shock": "+1 SD FLBR.ION (diff) each quarter",
+     "in_model": false,
+     "description": "Unemployment rate, Ontario (%)",
+     "sd": 0.684814,
+     "impact_8q_pct": 0.0,
+     "expected_sign": -1,
+     "direction_ok": null
+    }
+   ]
+  },
+  {
+   "id": "S2",
+   "section": "sensitivity",
+   "title": "Scenario forecasts rank in the expected order",
+   "status": "pass",
+   "finding": "After 8 quarters the balances rank S1 Upside > Baseline > S3 Downside > S4 Severe; the spread between S1 Upside and S4 Severe is 6.4%.",
+   "metrics": {
+    "balance_8q": {
+     "S1 Upside": 170970.0,
+     "Baseline": 169064.9,
+     "S3 Downside": 165518.9,
+     "S4 Severe": 160720.3
+    },
+    "spread_pct": 6.377337396141569
+   },
+   "threshold": "S1 Upside >= Baseline >= S3 Downside >= S4 Severe",
+   "severity": null,
+   "recommendation": "",
+   "chart": "s2_scenarios.png"
+  },
+  {
+   "id": "S3",
+   "section": "sensitivity",
+   "title": "Severity of the stress response compared with history",
+   "status": "pass",
+   "finding": "S4 Severe lowers 8-quarter growth by 5.1 pp against Baseline, 174% of the gap between the average and the worst 8-quarter growth in history (2.9 pp).",
+   "metrics": {
+    "scenario_drop_pp": 5.061721322753954,
+    "historical_drop_pp": 2.9164633148901573,
+    "ratio": 1.7355683155385733
+   },
+   "threshold": "ratio >= 50%",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  },
+  {
+   "id": "G1",
+   "section": "ground_truth",
+   "title": "True drivers recovered on this dataset",
+   "status": "warn",
+   "finding": "The model contains 2 of the 4 true drivers (FHPI.ION|dlog|L1, FYPD.ION|dlog|L1) and misses FRMORT5Y.IC|diff|L2, FLBR.ION|diff|L1; it includes no false drivers.",
+   "metrics": {
+    "true_drivers": 4,
+    "recovered": 2,
+    "false_drivers": 0
+   },
+   "threshold": "all true drivers, no false ones",
+   "severity": "medium",
+   "recommendation": "",
+   "chart": null,
+   "table": [
+    {
+     "true_driver": "FHPI.ION|dlog|L1",
+     "true_coef": 0.15,
+     "selected": true,
+     "selected_coef": 0.150745,
+     "other_form_selected": ""
+    },
+    {
+     "true_driver": "FYPD.ION|dlog|L1",
+     "true_coef": 0.2,
+     "selected": true,
+     "selected_coef": 0.255965,
+     "other_form_selected": ""
+    },
+    {
+     "true_driver": "FRMORT5Y.IC|diff|L2",
+     "true_coef": -0.0025,
+     "selected": false,
+     "selected_coef": null,
+     "other_form_selected": ""
+    },
+    {
+     "true_driver": "FLBR.ION|diff|L1",
+     "true_coef": -0.002,
+     "selected": false,
+     "selected_coef": null,
+     "other_form_selected": ""
+    }
+   ]
+  },
+  {
+   "id": "G2",
+   "section": "ground_truth",
+   "title": "Selection procedure recovers the truth on fresh simulated datasets",
+   "status": "warn",
+   "finding": "Across 50 datasets simulated from the true equation, Elastic Net first picks a given true driver in 15% of datasets on average and adds 0.5 false drivers per run; Screen first picks a given true driver in 6% of datasets on average and adds 2.2 false drivers per run. Found in under 20% of datasets even by the better approach: FLBR.ION|diff|L1, FRMORT5Y.IC|diff|L2, FYPD.ION|dlog|L1. With about 95 quarters of data, statistical selection cannot be relied on to find these channels. FYPD.ION|dlog|L1 is in the model under review, but Elastic Net first finds it in only 2% of fresh datasets: its inclusion here is partly luck of the sample.",
+   "metrics": {
+    "replications": 50,
+    "min_exact_rate": 0.0,
+    "mean_exact_rate": {
+     "Elastic Net first": 0.14500000000000002,
+     "Screen first": 0.06
+    }
+   },
+   "threshold": "each true driver found in >= 80% of datasets",
+   "severity": "medium",
+   "recommendation": "Do not rely on statistical selection alone for low-signal channels; impose theory-based channels with constrained coefficients.",
+   "chart": "g2_monte_carlo.png",
+   "table": [
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "FHPI.ION|dlog|L1",
+     "exact_rate": 0.56,
+     "variable_rate": 0.6,
+     "mean_coef_when_found": 0.174546,
+     "true_coef": 0.15
+    },
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "FYPD.ION|dlog|L1",
+     "exact_rate": 0.02,
+     "variable_rate": 0.04,
+     "mean_coef_when_found": 0.268499,
+     "true_coef": 0.2
+    },
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "FRMORT5Y.IC|diff|L2",
+     "exact_rate": 0.0,
+     "variable_rate": 0.0,
+     "mean_coef_when_found": null,
+     "true_coef": -0.0025
+    },
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "FLBR.ION|diff|L1",
+     "exact_rate": 0.0,
+     "variable_rate": 0.0,
+     "mean_coef_when_found": null,
+     "true_coef": -0.002
+    },
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "(false drivers per run)",
+     "exact_rate": 0.52,
+     "variable_rate": null,
+     "mean_coef_when_found": null,
+     "true_coef": null
+    },
+    {
+     "approach": "Elastic Net first",
+     "true_driver": "y_lag1 (AR term)",
+     "exact_rate": 1.0,
+     "variable_rate": null,
+     "mean_coef_when_found": 0.270438,
+     "true_coef": 0.3
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "FHPI.ION|dlog|L1",
+     "exact_rate": 0.18,
+     "variable_rate": 0.32,
+     "mean_coef_when_found": 0.162911,
+     "true_coef": 0.15
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "FYPD.ION|dlog|L1",
+     "exact_rate": 0.04,
+     "variable_rate": 0.12,
+     "mean_coef_when_found": 0.220613,
+     "true_coef": 0.2
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "FRMORT5Y.IC|diff|L2",
+     "exact_rate": 0.0,
+     "variable_rate": 0.0,
+     "mean_coef_when_found": null,
+     "true_coef": -0.0025
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "FLBR.ION|diff|L1",
+     "exact_rate": 0.02,
+     "variable_rate": 0.04,
+     "mean_coef_when_found": -0.005633,
+     "true_coef": -0.002
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "(false drivers per run)",
+     "exact_rate": 2.22,
+     "variable_rate": null,
+     "mean_coef_when_found": null,
+     "true_coef": null
+    },
+    {
+     "approach": "Screen first",
+     "true_driver": "y_lag1 (AR term)",
+     "exact_rate": 1.0,
+     "variable_rate": null,
+     "mean_coef_when_found": 0.261414,
+     "true_coef": 0.3
+    }
+   ]
+  },
+  {
+   "id": "G3",
+   "section": "ground_truth",
+   "title": "Cost of the omitted drivers in the severe scenario",
+   "status": "pass",
+   "finding": "Under the true equation S4 Severe ends 8 quarters 5.3 pp below Baseline; the model gives 5.1 pp, so it understates the stress impact by 5%. Over the backtest period the omitted drivers contributed -0.002 pp to quarterly growth on average, too little to explain the forecast bias in P4.",
+   "metrics": {
+    "true_gap_pp": 5.3178499889931174,
+    "model_gap_pp": 5.061721322753954,
+    "understatement_pct": 4.81639509894598,
+    "omitted_contribution_pp_per_q": -0.001577,
+    "omitted": [
+     "FRMORT5Y.IC|diff|L2",
+     "FLBR.ION|diff|L1"
+    ]
+   },
+   "threshold": "stress gap within 20% of the truth",
+   "severity": null,
+   "recommendation": "",
+   "chart": null
+  }
+ ]
+}
