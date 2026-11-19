@@ -1,10 +1,14 @@
 # macroforecast-validation: an independent validation of a forecasting model, with an agent that drafts and a human who signs
 
-This repo is a **second-line model validation** of a real piece of first-line work: the loan-balance forecasting
-model built with [`macroforecast`](https://github.com/wuxiaokai-hk/Forecasting-test). It treats that project the
-way a model risk team would. It re-reads the raw data, re-implements the transforms, re-estimates the equation and
+A reusable toolkit for **independent (second-line) validation of a macro-driven forecasting model**, the way a
+model risk team would do it. It re-reads the raw data, re-implements the transforms, re-estimates the equation and
 re-runs the scenarios independently. It then challenges the model on data, theory, performance, stability and
-stress, and writes a rated report.
+stress, and writes a rated report that a human reviewer signs.
+
+The repo ships with a complete worked example: the validation of a loan-balance forecasting model built with the
+open-source [`macroforecast`](https://github.com/wuxiaokai-hk/macroforecast) package on simulated data. Point
+[`validation.yaml`](validation.yaml) at your own model run and data to validate your own model (see
+[Use it on your own model](#use-it-on-your-own-model)).
 
 Two things make it different from a notebook of tests:
 
@@ -19,7 +23,7 @@ Two things make it different from a notebook of tests:
 **[Open the sample report](sample_report/validation_report.html)** (download it and open it in a browser; it is
 one self-contained HTML file). It is a *draft* on purpose: no reviewer has signed it.
 
-## What the validation found
+## What the validation found (worked example)
 
 The model under review is the developer's recommended model, *Elastic Net first*:
 loan growth = AR(1) + house prices + disposable income + 6 COVID dummies.
@@ -79,8 +83,8 @@ test is explained in [`docs/methodology.md`](docs/methodology.md).
 ## Run it
 
 ```bash
-git clone https://github.com/wuxiaokai-hk/Forecasting-test ../Forecasting-test   # the model under review
-pip install -e ../Forecasting-test
+git clone https://github.com/wuxiaokai-hk/macroforecast ../macroforecast   # the model under review
+pip install -e ../macroforecast
 pip install -r requirements.txt
 
 python examples/make_run.py            # the developer's run, about 2 minutes -> runs/loan_balance
@@ -105,6 +109,19 @@ python -m mfvalidate finalize --out report --reviewer "Your Name"
 
 `finalize` refuses to run until every section is approved, a rating is set, and no number has changed since
 the approvals.
+
+## Use it on your own model
+
+1. Produce a run of your model with `macroforecast` (or export the same tables from your own code: the data, the
+   chosen equation, the backtest and the scenario forecasts).
+2. Copy [`validation.yaml`](validation.yaml) and change the paths under `data`, the model profile, the risk tier and
+   the thresholds to fit your institution's model risk policy.
+3. Run `python -m mfvalidate run --config your_validation.yaml --out report`, review each drafted section, and
+   approve it under your own name.
+
+The tests themselves are general: data lineage, reproducibility, residual diagnostics, out-of-sample performance,
+stability, scenario sensibility and a ground-truth test of the selection procedure. The method for each is in
+[`docs/methodology.md`](docs/methodology.md).
 
 ## Tests
 
@@ -134,3 +151,7 @@ tools/monte_carlo.py re-simulates the true process and re-runs driver selection
 evidence/            Monte Carlo results used by G2
 sample_report/       the draft report produced by `mfvalidate run`
 ```
+
+## License
+
+MIT, see [LICENSE](LICENSE). Free to use, change and share. Data downloaded from public sources stay under their providers' terms. Independent open-source project, not affiliated with or endorsed by any employer, regulator or data vendor.

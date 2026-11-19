@@ -5,15 +5,15 @@ model_under_review: auto          # "auto" = the model the developer recommends 
 run_dir: runs/loan_balance        # finished macroforecast run (python examples/make_run.py builds it)
 
 inputs:                           # the developer's raw inputs, re-read independently
-  data: ../Forecasting-test/data/bank_data.csv
+  data: ../macroforecast/data/bank_data.csv
   target: loan_balance
-  metadata: ../Forecasting-test/data/macro_metadata.csv
-  events: ../Forecasting-test/data/bank_events.csv
+  metadata: ../macroforecast/data/macro_metadata.csv
+  events: ../macroforecast/data/bank_events.csv
   scenarios:
-    Baseline: ../Forecasting-test/data/moodys_baseline.csv
-    S1 Upside: ../Forecasting-test/data/moodys_s1_upside.csv
-    S3 Downside: ../Forecasting-test/data/moodys_s3_downside.csv
-    S4 Severe: ../Forecasting-test/data/moodys_s4_severe.csv
+    Baseline: ../macroforecast/data/scenario_baseline.csv
+    S1 Upside: ../macroforecast/data/scenario_s1_upside.csv
+    S3 Downside: ../macroforecast/data/scenario_s3_downside.csv
+    S4 Severe: ../macroforecast/data/scenario_s4_severe.csv
   scenario_order: [S1 Upside, Baseline, S3 Downside, S4 Severe]   # expected ranking, best to worst
 
 model_profile:

@@ -5,4 +5,4 @@ statsmodels
 matplotlib
 pyyaml
 pytest
-# the developer's package under review: pip install -e ../Forecasting-test
+# the developer's package under review: pip install -e ../macroforecast

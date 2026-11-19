@@ -18,7 +18,7 @@ import pandas as pd
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 p = argparse.ArgumentParser()
-p.add_argument("--dev", default=os.path.join(HERE, "..", "Forecasting-test"))
+p.add_argument("--dev", default=os.path.join(HERE, "..", "macroforecast"))
 p.add_argument("--reps", type=int, default=50)
 p.add_argument("--first-seed", type=int, default=1001)
 p.add_argument("--out", default=os.path.join(HERE, "evidence", "monte_carlo_terms.csv"))
@@ -39,7 +39,7 @@ for seed in range(a.first_seed, a.first_seed + a.reps):
     subprocess.run([sys.executable, sim, str(seed), d], check=True, capture_output=True)
     fc = Forecaster(target="loan_balance", path=out)
     fc.fit(data=os.path.join(d, "bank_data.csv"), metadata=os.path.join(d, "macro_metadata.csv"), literature=None,
-           events=os.path.join(d, "bank_events.csv"), macro={"Baseline": os.path.join(d, "moodys_baseline.csv")},
+           events=os.path.join(d, "bank_events.csv"), macro={"Baseline": os.path.join(d, "scenario_baseline.csv")},
            presets="fast", oos=False, trace=False)
     c = fc.coefficients()
     for m in ("Screen first", "Elastic Net first"):
